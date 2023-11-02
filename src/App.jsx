@@ -12,6 +12,7 @@ import PageNotFound from './pages/PageNotFound';
 
 // component
 import CityList from './components/CityList';
+import CountryList from './components/CountryList';
 
 const BASE_URL = 'http://localhost:9000';
 
@@ -45,7 +46,7 @@ const App = () => {
         <Route path="app" element={<AppLayout />}>
           <Route index element={<CityList cities={cities} isLoading={isLoading} />} />
           <Route path="cities" element={<CityList cities={cities} isLoading={isLoading} />} />
-          <Route path="countries" />
+          <Route path="countries" element={<CountryList cities={cities} isLoading={isLoading} />} />
           <Route path="form" />
         </Route>
         <Route path="*" element={<PageNotFound />} />
