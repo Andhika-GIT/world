@@ -8,6 +8,7 @@ const cityStore = create(
   persist(
     (set, get) => ({
       cities: [],
+      currentCity: {},
       isLoading: false,
       setIsLoading: (condition) => {
         set({ isLoading: condition });
@@ -18,6 +19,17 @@ const cityStore = create(
           const res = await axios.get(`${BASE_URL}/cities`);
 
           set({ cities: res.data });
+        } catch (e) {
+          alert("there's something wrong when fetching cities");
+        } finally {
+          set({ isLoading: false });
+        }
+      },
+      getCurrentCity: async (id) => {
+        set({ isLoading: true });
+        try {
+          const res = await axios.get(`${BASE_URL}/cities/${id}`);
+          set({ currentCity: res.data });
         } catch (e) {
           alert("there's something wrong when fetching cities");
         } finally {
