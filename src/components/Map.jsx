@@ -1,9 +1,26 @@
 import styles from './Map.module.css';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, useMap, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, useMap, Marker, Popup, useMapEvent } from 'react-leaflet';
 import cityStore from '../stores/cityStore';
 
 import { useState, useEffect } from 'react';
+
+// create our own custom center, to make the map reactive when location is changed
+const ChangeCenter = ({ position }) => {
+  const map = useMap();
+  map.setView(position);
+  return null;
+};
+
+const DetectClick = () => {
+  const navigate = useNavigate();
+  useMapEvent({
+    click: (e) => {
+      const { lat, lng } = e.latlng;
+      navigate(`form?lat=${lat}&lng=${lng}`);
+    },
+  });
+};
 
 const Map = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,13 +35,6 @@ const Map = () => {
       .map((char) => String.fromCharCode(char - 127397).toLowerCase())
       .join('');
     return <img src={`https://flagcdn.com/24x18/${countryCode}.png`} alt="flag" />;
-  };
-
-  // create our own custom center, to make the map reactive when location is changed
-  const ChangeCenter = ({ position }) => {
-    const map = useMap();
-    map.setView(position);
-    return null;
   };
 
   useEffect(() => {
@@ -47,6 +57,7 @@ const Map = () => {
         ))}
 
         <ChangeCenter position={mapPosition} />
+        <DetectClick />
       </MapContainer>
     </div>
   );
