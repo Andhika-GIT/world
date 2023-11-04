@@ -6,6 +6,8 @@ import BackButton from './BackButton';
 
 import cityStore from '../stores/cityStore';
 
+import Spinner from './Spinner';
+
 const formatDate = (date) =>
   new Intl.DateTimeFormat('en', {
     day: 'numeric',
@@ -16,11 +18,11 @@ const formatDate = (date) =>
 
 function City() {
   const { id } = useParams();
-  console.log(id);
   const { currentCity, getCurrentCity, isLoading } = cityStore();
 
   useEffect(() => {
-    if (Object.keys(currentCity).length !== 0) return;
+    const currentCityId = currentCity.id.toString();
+    if (id === currentCityId) return;
     getCurrentCity(id);
   }, [id]);
 
