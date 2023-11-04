@@ -1,9 +1,20 @@
+import { useEffect } from 'react';
+
 import Spinner from './Spinner';
 import styles from './CountryList.module.css';
 import CountryItem from './CountryItem';
 import Message from './Message';
 
-function CountryList({ cities, isLoading }) {
+import cityStore from '../stores/cityStore';
+
+function CountryList() {
+  const { isLoading, cities, getCities } = cityStore();
+
+  useEffect(() => {
+    if (cities.length > 0) return;
+    getCities();
+  }, []);
+
   if (isLoading) return <Spinner />;
 
   if (!cities.length) return <Message message="Add your first city by clicking on a city on the map" />;
