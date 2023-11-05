@@ -3,6 +3,8 @@ import styles from './CityItem.module.css';
 
 import cityStore from '../stores/cityStore';
 
+import { motion, AnimatePresence } from 'framer-motion';
+
 const formatDate = (date) =>
   new Intl.DateTimeFormat('en', {
     day: 'numeric',
@@ -28,7 +30,7 @@ const CityItem = ({ city }) => {
   };
 
   return (
-    <li>
+    <motion.li key={id} layout initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, x: 50 }} transition={{ duration: 0.5 }}>
       <Link className={`${styles.cityItem} ${id === currentCity?.id ? styles['cityItem--active'] : ''}`} to={`${id}?lat=${lat}&lng=${lng}`}>
         <span className={styles.emoji}>{flagemojiToPNG(emoji)}</span>
         <h3 className={styles.name}>{cityName}</h3>
@@ -37,7 +39,7 @@ const CityItem = ({ city }) => {
           &times;
         </button>
       </Link>
-    </li>
+    </motion.li>
   );
 };
 

@@ -10,6 +10,8 @@ import cityStore from '../stores/cityStore';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { motion, AnimatePresence } from 'framer-motion';
+
 const CityList = () => {
   const { isLoading, cities, getCities } = cityStore();
   const navigate = useNavigate();
@@ -27,9 +29,11 @@ const CityList = () => {
       </div>
 
       <ul className={styles.cityList}>
-        {cities.map((city) => (
-          <CityItem key={city.id} city={city} />
-        ))}
+        <AnimatePresence>
+          {cities.map((city) => (
+            <CityItem key={city.id} city={city} />
+          ))}
+        </AnimatePresence>
       </ul>
     </>
   );
