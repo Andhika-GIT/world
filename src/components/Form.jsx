@@ -45,7 +45,7 @@ function Form() {
   const [notes, setNotes] = useState('');
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
 
-  const { createCity } = cityStore();
+  const { createCity, isLoading } = cityStore();
 
   const [locationError, setLocationError] = useState('');
 
@@ -104,7 +104,7 @@ function Form() {
   if (locationError) return <Message message={locationError} />;
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
+    <form className={`${styles.form} ${isLoading ? styles.loading : ''} `} onSubmit={handleSubmit}>
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input id="cityName" onChange={(e) => setCityName(e.target.value)} value={cityName} />

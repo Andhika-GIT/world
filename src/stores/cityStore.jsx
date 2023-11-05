@@ -56,7 +56,7 @@ const cityStore = create(
         set((state) => ({
           cities: [...state.cities, city],
         }));
-        set({ isLoading: true });
+        set({ isLoading: false });
       },
     }),
     {
