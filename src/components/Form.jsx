@@ -3,6 +3,7 @@ import styles from './Form.module.css';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 import { useUrlPosition } from '../hooks/useUrlPosition';
 
@@ -13,10 +14,9 @@ import BackButton from './BackButton';
 
 // datepicker
 import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import cityStore from '../stores/cityStore';
-
-import 'react-datepicker/dist/react-datepicker.css';
 
 // convert country code to emoji
 export function convertToEmoji(countryCode) {
@@ -86,6 +86,7 @@ function Form() {
     if (!cityName || !startDate) return;
 
     const newCity = {
+      id: uuidv4(),
       cityName: cityName,
       country: country,
       emoji: countryEmoji,
@@ -95,6 +96,7 @@ function Form() {
     };
 
     createCity(newCity);
+    navigate('/app/cities');
   };
 
   if (!mapLat || !mapLng) return <Message message="Start by clicking somewhere on the map" />;
