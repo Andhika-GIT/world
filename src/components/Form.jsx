@@ -9,6 +9,14 @@ import { useUrlPosition } from '../hooks/useUrlPosition';
 import Spinner from './Spinner';
 import Message from './Message';
 import Button from './Button';
+import BackButton from './BackButton';
+
+// datepicker
+import DatePicker from 'react-datepicker';
+
+import cityStore from '../stores/cityStore';
+
+import 'react-datepicker/dist/react-datepicker.css';
 
 // convert country code to emoji
 export function convertToEmoji(countryCode) {
@@ -33,9 +41,11 @@ function Form() {
   const [cityName, setCityName] = useState('');
   const [country, setCountry] = useState('');
   const [countryEmoji, setCountryEmoji] = useState('');
-  const [date, setDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date());
   const [notes, setNotes] = useState('');
   const [isLoadingLocation, setIsLoadingLocation] = useState(false);
+
+  const { createCity } = cityStore();
 
   const [locationError, setLocationError] = useState('');
 
@@ -70,12 +80,31 @@ function Form() {
     fetchCity();
   }, [mapLat, mapLng]);
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!cityName || !startDate) return;
+
+    const newCity = {
+      cityName: cityName,
+      country: country,
+      emoji: countryEmoji,
+      date: startDate,
+      notes: notes,
+      position: { lat: mapLat, lng: mapLng },
+    };
+
+    createCity(newCity);
+  };
+
+  if (!mapLat || !mapLng) return <Message message="Start by clicking somewhere on the map" />;
+
   if (isLoadingLocation) return <Spinner />;
 
   if (locationError) return <Message message={locationError} />;
 
   return (
-    <form className={styles.form}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <div className={styles.row}>
         <label htmlFor="cityName">City name</label>
         <input id="cityName" onChange={(e) => setCityName(e.target.value)} value={cityName} />
@@ -84,7 +113,7 @@ function Form() {
 
       <div className={styles.row}>
         <label htmlFor="date">When did you go to {cityName}?</label>
-        <input id="date" onChange={(e) => setDate(e.target.value)} value={date} />
+        <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} dateFormat="dd/MM/yyyy" />
       </div>
 
       <div className={styles.row}>
@@ -94,15 +123,7 @@ function Form() {
 
       <div className={styles.buttons}>
         <Button type="primary">Add</Button>
-        <Button
-          type="back"
-          onClick={(e) => {
-            e.preventDefault();
-            navigate(-1);
-          }}
-        >
-          &larr; Back
-        </Button>
+        <BackButton />
       </div>
     </form>
   );

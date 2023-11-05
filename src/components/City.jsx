@@ -7,6 +7,7 @@ import BackButton from './BackButton';
 import cityStore from '../stores/cityStore';
 
 import Spinner from './Spinner';
+import Message from './Message';
 
 const formatDate = (date) =>
   new Intl.DateTimeFormat('en', {
@@ -21,12 +22,10 @@ function City() {
   const { currentCity, getCurrentCity, isLoading } = cityStore();
 
   useEffect(() => {
-    const currentCityId = currentCity.id.toString();
-    if (id === currentCityId) return;
     getCurrentCity(id);
   }, [id]);
 
-  const { cityName, emoji, date, notes } = currentCity;
+  const { cityName, emoji, date, notes } = currentCity || {};
 
   const flagemojiToPNG = (flag) => {
     var countryCode = Array.from(flag, (codeUnit) => codeUnit.codePointAt())
@@ -34,6 +33,8 @@ function City() {
       .join('');
     return <img src={`https://flagcdn.com/24x18/${countryCode}.png`} alt="flag" />;
   };
+
+  if (!currentCity) return <Message message="City not found, please choose a correct a city" />;
 
   if (isLoading) return <Spinner />;
 
