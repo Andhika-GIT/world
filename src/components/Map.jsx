@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import styles from './Map.module.css';
+
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { MapContainer, TileLayer, useMap, Marker, Popup, useMapEvent } from 'react-leaflet';
 import cityStore from '../stores/cityStore';
 
 import { useGeolocation } from '../hooks/useGeolocation';
+import { useUrlPosition } from '../hooks/useUrlPosition';
+
 import Button from './Button';
 
 // to render flag
@@ -33,10 +36,8 @@ const DetectClick = () => {
 };
 
 const Map = () => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const mapLat = searchParams.get('lat');
-  const mapLng = searchParams.get('lng');
   const [mapPosition, setMapPosition] = useState([40, 0]);
+  const [mapLat, mapLng] = useUrlPosition();
   const navigate = useNavigate();
   const { cities } = cityStore();
   const { isLoading: geoIsLoading, position: geoPosition, getPosition } = useGeolocation();
